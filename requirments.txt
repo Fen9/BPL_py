@@ -1,0 +1,4 @@
+numpy
+pyro-ppl
+matplotlib
+scipy
