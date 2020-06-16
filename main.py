@@ -28,7 +28,7 @@ def sample_from_discrete_distribution(vector, num_samples ,weights):
     return vector[samples[0]], samples[0]
 
 
-def generate_exemplars(log_weighted_scores, G, lib, num_exemplars):
+def task_generate_exemplars(log_weighted_scores, G, lib, num_exemplars):
     weighted_scores = np.exp(log_weighted_scores - logsumexp(log_weighted_scores))
     models = G['models'][0][0]
     samples_type = G['samples_type'][0][0]
@@ -41,6 +41,11 @@ def generate_exemplars(log_weighted_scores, G, lib, num_exemplars):
         print(q)
         exit()
 
+
+def generate_exemplars(template, lbclass):
+    
+
+
 def main():
     character_id = args.character_id
     num_exemplars = args.num_exemplars
@@ -50,7 +55,7 @@ def main():
 
     weighted_scores = rescore_by_rank(scores)
     print(weighted_scores)
-    generate_exemplars(weighted_scores, G, None, num_exemplars)
+    task_generate_exemplars(weighted_scores, G, None, num_exemplars)
 
 
 if __name__ == "__main__":
