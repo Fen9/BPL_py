@@ -1,3 +1,5 @@
+from stroke.stroke import stroke
+
 class motor_program():
     def __init__(self, args):
         if type(args) == int:
@@ -18,3 +20,15 @@ class motor_program():
         self._cache_noise_current = None
         self._cache_prob_pixel_motor = None
         self._cache_ink_off_page = None
+
+    # oldMP -> newMP
+    def load_legacy(self, oldMP):
+        self._image = oldMP._image
+        self._fixed_parameters = oldMP._fixed_parameters
+        self._epsilon = oldMP._epsilon
+        self._blur_sigma = oldMP._blur_sigma
+        self._affine_transformation = oldMP._affine_transformation
+        self._strokes = oldMP._strokes
+        for i in range(self._num_strokes):
+            self._strokes[i] = stroke()
+            self._strokes[i].load_legacy(oldMP._strokes[i])
