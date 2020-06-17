@@ -30,10 +30,12 @@ def getAttachPoint(r, previous_strokes):
     if r['type'] == 'unihist':
         return r['gpos']
     elif r['type'] == 'start':
-        return previous_strokes[r['attach_spot']]._motor[0][0,:]
+        return previous_strokes[r['attach_spot']-1]._motor[0][0,:]
     elif r['type'] == 'end':
-        return previous_strokes[r['attach_spot']]._motor[-1][-1,:]
+        return previous_strokes[r['attach_spot']-1]._motor[-1][-1,:]
     elif r['type'] == 'mid':
-        bspline = previous_strokes[r['attach_spot']].motor_spline[: ,: ,r['subid_spot']]
+        motor_spline = previous_strokes[r['attach_spot']-1]._motor_spline
+        # bspline = motor_spline[: ,: ,r['subid_spot']-1]
+        bspline = motor_spline[: ,r['subid_spot']-1]
         return bspline.bspline_eval(r['eval_spot_token'], bspline)
 
