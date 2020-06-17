@@ -41,7 +41,7 @@ def task_generate_exemplars(G, lib, num_exemplars):
         # choose the parse
         M, idx = rand_discrete(G['models'], wts)
         # choose the type-level resampling
-        Q, _ = rand_discrete(G['samples_type'][idx], np.ones(len(G['samples_type']))/np.sum(np.ones(len(G['samples_type']))))
+        Q, q_idx = rand_discrete(G['samples_type'][idx], np.ones(len(G['samples_type']))/np.sum(np.ones(len(G['samples_type']))))
         # Q = Q.copy()
         Q._I = copy.deepcopy(M._I)
 
