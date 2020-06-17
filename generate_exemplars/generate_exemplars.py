@@ -8,16 +8,23 @@ pyro.enable_validation(True)
 
 from motor_program.motor_program import motor_program
 from stroke.stroke import stroke
-from mat_utils import lib_py, convert_object_to_tensor, convert_to_dict_of_tensors
-
+from classes_relations.relations import relations
+import generate_exemplars.CPD as CPD
 # %% 
 
-def generate_exemplars(template: motor_program, lib):
-    m: motor_program = motor_program()
+def generate_exemplar(template, lib):
+    m: motor_program = motor_program(template)
 
     for i in range(m._num_strokes):
         s: stroke = m.get_strokes(i)
-        # if s.get_R
+        r: relations = s.get_R()
+        if r._type == 'mid':
+            r._eval_spot_token = CPD.sample_relation_token(lib, r._eval_spot_token)
+        s._pos_token = CPD.sample_position(lib, r, m._strokes[:i])
+        s._shapes_token = CPD.sample_shape_token(lib, s._shapes_type)
+        s._invscale_token = CPD.sample_invscale_token(lib, s._invscales_type)
+        
+
 
 # %%
 # def generate_exemplars():

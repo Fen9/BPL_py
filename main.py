@@ -7,6 +7,7 @@ from scipy.special import logsumexp
 import scipy.io as sio
 
 from mat_utils import process_mat
+from generate_exemplars.generate_exemplars import generate_exemplar
 
 parser = argparse.ArgumentParser(description='BPL Python Version')
 parser.add_argument('--character_id', type=int, default=35)
@@ -22,7 +23,7 @@ def rescore_by_rank(scores):
     log_weighted_scores = np.log(weighted_scores)
     weighted_scores = np.exp(log_weighted_scores - logsumexp(log_weighted_scores))
     sum_wts = np.sum(weighted_scores)
-    return weighted_scores/sum_wts    
+    return weighted_scores/sum_wts
 
 
 def rand_discrete(models, wts):
