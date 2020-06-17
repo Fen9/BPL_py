@@ -2,6 +2,7 @@ from stroke.stroke import stroke
 import numpy as np
 import copy
 import UtilMP as UtilMP
+from motor_program.helper import render_image
 
 class motor_program():
     def __init__(self, args):
