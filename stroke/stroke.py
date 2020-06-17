@@ -125,3 +125,5 @@ def vanilla_to_motor(vanilla_shapes, invscales, firest_ops):
             vanilla_shapes[:,:,i] = invscales[i] * vanilla_shapes[:,:i]
 
         vanilla_traj = np.array((n, 1))
+        for i in range(0, n):
+            pass

@@ -1,2 +1,4 @@
 venv
 model_fits/
+
+.vscode/

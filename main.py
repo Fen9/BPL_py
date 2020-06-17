@@ -43,14 +43,18 @@ def task_generate_exemplars(log_weighted_scores, G, lib, num_exemplars):
 
 
 def generate_exemplars(template, lbclass):
-    
+    pass    
 
 
 def main():
     character_id = args.character_id
     num_exemplars = args.num_exemplars
-    file_name = args.path + 'model_fits/handwritten' + str(character_id) + '_G' + '.mat'
-    G = loadmat(file_name)['G']
+    # file_name = args.path + 'model_fits/handwritten' + str(character_id) + '_G' + '.mat'
+    file_name = 'G35_py' + '.mat'
+    f = loadmat(file_name)
+    print(f)
+    exit()
+    # G = loadmat(file_name)['G']
     scores = G['scores'][0][0]
 
     weighted_scores = rescore_by_rank(scores)
