@@ -4,4 +4,4 @@ model_fits/
 .vscode/
 G/
 G.zip
-.pyc
+*.pyc
