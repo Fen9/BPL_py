@@ -14,6 +14,7 @@ import classes_relations.relations as relations
 
 # %%
 def sample_relation_token(lib, eval_spot_type):
+    print("sample_relation_token")
     # print(eval_spot_type)
     # sample an attachment, but within the bounds as defined by the model
     sigma_attach = torch.tensor(lib['tokenvar']['sigma_attach'])
@@ -22,7 +23,7 @@ def sample_relation_token(lib, eval_spot_type):
     while not score_relation_token(lib, eval_spot_token, eval_spot_type):
         eval_spot_token = eval_spot_type + sigma_attach * torch.randn((1, ))
     # print(eval_spot_token)
-    return eval_spot_token
+    return eval_spot_token.numpy()
 
 # simplified from matlab code, not actually scoring, just checking if within bound....
 def score_relation_token(lib, eval_spot_token, eval_spot_type):
@@ -42,7 +43,7 @@ def sample_invscale_token(lib, invscales_type):
     invscales_token = invscales_type + sigma_invscale * torch.randn(sz)
     while not score_invscale_token(lib, invscales_token, invscales_type):
         invscales_token = invscales_type + sigma_invscale * torch.randn(sz)
-    return invscales_token
+    return invscales_token.numpy()
 
 # simplified from matlab code, not actually scoring, just checking if within bound....
 # invscales_token: [n x 1] vector
@@ -79,7 +80,7 @@ def sample_position(lib, r, previous_strokes):
 def sample_shape_token(lib, bspline_stack):
     sigma_shape = lib['tokenvar']['sigma_shape']
     ret = torch.from_numpy(bspline_stack) + torch.tensor(sigma_shape) * torch.randn(bspline_stack.shape)
-    return ret
+    return ret.numpy()
 
 def sample_affine(lib): # just one sample
     # affine transformation [x-scale,y-scale,x-translate,y-translate]

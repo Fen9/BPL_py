@@ -40,5 +40,5 @@ def getAttachPoint(r, previous_strokes):
             b = motor_spline
         else: # 3
             b = motor_spline [:, :, r['subid_spot'] - 1]
-        return b.bspline_eval(r['eval_spot_token'], b)
+        return bspline.bspline_eval(r['eval_spot_token'], b)
 

@@ -16,6 +16,7 @@ def generate_exemplar(template, lib):
     m: motor_program = motor_program(template)
 
     for i in range(m._num_strokes):
+        print(i)
         # print(len(m._strokes))
         s: stroke = m._strokes[i]
         r: relations = s.get_R()
@@ -31,7 +32,7 @@ def generate_exemplar(template, lib):
     m._epsilon = template['parameters']['min_epsilon']
 
     # sample image
-    return CPD.sample_image(m._prob_img)
+    return CPD.sample_image(m.get_prob_img())
 
 
 # %%
