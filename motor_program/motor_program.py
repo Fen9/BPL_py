@@ -5,7 +5,7 @@ import UtilMP as UtilMP
 
 class motor_program():
     def __init__(self, args):
-        self._image = None
+        self._I = None
         self._strokes = None
         self._fixed_parameters = None
         self._listener_handle = None
@@ -17,7 +17,7 @@ class motor_program():
         self._ink_off_page = None
         self._motor = None
         self._motor_warped = None
-        self._cache_grand_current = None
+        self._cache_grand_current = False 
         self._cache_noise_current = False
         self._cache_prob_img_motor = None
         self._cache_prob_img = None
@@ -37,7 +37,7 @@ class motor_program():
 
     # oldMP -> newMP
     def load_legacy(self, oldMP):
-        self._image = oldMP._image
+        self._I = oldMP._I
         self._fixed_parameters = oldMP._fixed_parameters
         self._epsilon = oldMP._epsilon
         self._blur_sigma = oldMP._blur_sigma
@@ -81,6 +81,7 @@ class motor_program():
             self._cache_ink_off_page = self._ink_off_page
             self._cache_prob_img_motor = self._motor
             self._cache_noise_current = True
+        return self._prob_img
 
     # is there ink off of the page?
     def get_ink_off_page(self):
@@ -94,11 +95,13 @@ class motor_program():
             self._cache_ink_off_page = self._ink_off_page
             self._cache_prob_img_motor = self._motor
             self._cache_noise_current = True
+        return self._ink_off_page
 
     # is the cache is up to date
     def get_cache_grand_current(self):
         out = self._cache_noise_current
-        return (out and (self._cache_prob_img_motor == self._motor))
+        self._cache_grand_current = (out and (self._cache_prob_img_motor == self._motor))
+        return self._cache_grand_current
         
     # helper function
     def all_same(present):
@@ -134,7 +137,7 @@ class motor_program():
     # remove memory-heavy image matrices from the class
     def lightweight(self):
         self._cache_prob_img = None
-        self._image = None
+        self._I = None
         self._cache_noise_current = False
 
     def clear_shape_type(self):

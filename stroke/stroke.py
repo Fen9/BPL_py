@@ -2,26 +2,26 @@ import copy
 
 class stroke():
     def __init__(self):
-        self._my_type
-        self._lh
-        self._R
-        self._ids
-        self._invscales_type
-        self._shapes_type
-        self._pos_token
-        self._invscale_token
-        self._shapes_token
-        self._nsub
-        self._motor
-        self._motor_spline
-        self._cache_current
-        self._cache_motor
-        self._cache_motor_spline
+        self._my_type = None
+        self._lh = None
+        self._R = None
+        self._ids = None
+        self._invscales_type = None
+        self._shapes_type = None
+        self._pos_token = None
+        self._invscale_token = None
+        self._shapes_token = None
+        self._nsub = None
+        self._motor = None
+        self._motor_spline = None
+        self._cache_current = None
+        self._cache_motor = None
+        self._cache_motor_spline = None
         self._cache_current = False
-        self._cache_motor
-        self._cache_motor_spline
-        self._eval_spot_token
-        self._po
+        self._cache_motor = None
+        self._cache_motor_spline = None
+        self._eval_spot_token = None
+        self._po = None
 
     def load_legacy(self, oldS):
         self._my_type = copy.deepcopy(oldS._my_type)
