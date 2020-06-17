@@ -19,7 +19,6 @@ def generate_exemplar(template, lib):
         # print(len(m._strokes))
         s: stroke = m._strokes[i]
         r: relations = s.get_R()
-        print(r)
         if r['type'] == 'mid':
             r['eval_spot_token'] = CPD.sample_relation_token(lib, r['eval_spot_type'])
         s._pos_token = CPD.sample_position(lib, r, m._strokes[:i])

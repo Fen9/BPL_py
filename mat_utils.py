@@ -81,14 +81,16 @@ def load_mat_G(path):
 
         out_G['models'][i]._cache_grant_curent = copy.deepcopy(G['models'][i]['ink_off_page'])
     
-        out_G['models'][i]._stroke = []
+        out_G['models'][i]._strokes = []
         for j in range(0, len(G['models'][i]['S'])):
             s = stroke()
+            # print(G['models'][i]['S'][j].keys())
             s._my_type = copy.deepcopy(G['models'][i]['S'][j]['myType'])
             # s._lh = copy.deepcopy(G['models'][i]['S'][j]['lh'])
             s._R = copy.deepcopy(G['models'][i]['S'][j]['R'])
             s._ids = copy.deepcopy(G['models'][i]['S'][j]['ids'])
             s._invscales_type = copy.deepcopy(G['models'][i]['S'][j]['invscales_type'])
+            s._shapes_type = copy.deepcopy(G['models'][i]['S'][j]['shapes_type'])
             s._pos_token = copy.deepcopy(G['models'][i]['S'][j]['pos_token'])
             s._invscale_token = copy.deepcopy(G['models'][i]['S'][j]['invscales_token'])
             s._shapes_token = copy.deepcopy(G['models'][i]['S'][j]['shapes_token'])
@@ -98,7 +100,7 @@ def load_mat_G(path):
             for k in range(len(G['models'][i]['S'][j]['motor'])):
                 s._motor.append(copy.deepcopy(G['models'][i]['S'][j]['motor'][k]['val']))
             s._motor_spline = copy.deepcopy(G['models'][i]['S'][j]['motor_spline'])
-            out_G['models'][i]._stroke.append(s)
+            out_G['models'][i]._strokes.append(s)
 
     out_G['samples_type'] = []
     for m in range(0, len(G['samples_type'])):
@@ -137,6 +139,7 @@ def load_mat_G(path):
                 s._R = copy.deepcopy(G['samples_type'][m][i]['S'][j]['R'])
                 s._ids = copy.deepcopy(G['samples_type'][m][i]['S'][j]['ids'])
                 s._invscales_type = copy.deepcopy(G['samples_type'][m][i]['S'][j]['invscales_type'])
+                s._shapes_type = copy.deepcopy(G['samples_type'][m][i]['S'][j]['shapes_type'])
                 s._pos_token = copy.deepcopy(G['samples_type'][m][i]['S'][j]['pos_token'])
                 s._invscale_token = copy.deepcopy(G['samples_type'][m][i]['S'][j]['invscales_token'])
                 s._shapes_token = copy.deepcopy(G['samples_type'][m][i]['S'][j]['shapes_token'])
