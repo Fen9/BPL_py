@@ -19,11 +19,17 @@ def generate_exemplar(template, lib):
         s: stroke = m.get_strokes(i)
         r: relations = s.get_R()
         if r._type == 'mid':
-            r._eval_spot_token = CPD.sample_relation_token(lib, r._eval_spot_token)
+            r._eval_spot_token = CPD.sample_relation_token(lib, r._eval_spot_type)
         s._pos_token = CPD.sample_position(lib, r, m._strokes[:i])
         s._shapes_token = CPD.sample_shape_token(lib, s._shapes_type)
         s._invscale_token = CPD.sample_invscale_token(lib, s._invscales_type)
         
+    m._affine_transformation = CPD.sample_affine(lib)
+    m._blur_sigma = template['parameters']['min_blur_sigma']
+    m._epsilon = template['parameters']['min_epsilon']
+
+    # sample image
+    return CPD.sample_image(m._prob_img)
 
 
 # %%
