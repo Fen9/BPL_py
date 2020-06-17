@@ -1,4 +1,6 @@
 from stroke.stroke import stroke
+import numpy as np
+import UtilMP as UtilMP
 
 class motor_program():
     def __init__(self, args):
@@ -129,8 +131,52 @@ class motor_program():
 
     def clear_shape_type(self):
         for i in range(self._num_strokes):
-            self._strokes[i]._shape_type
+            self._strokes[i]._shape_type = None
+    
+
 
     # apply affine transformation to the stroke trajectories
     # and return a nested cell aray
     def apply_warp(self):
+        motor_unwarped = self._motor
+        if np.all(self._affine_transformation) == 0:
+            motor_warped = motor_unwarped
+            return
+        
+        cell_traj = UtilMP.flatten_substrokes(motor_unwarped)
+        com = com_char(cell_traj)
+        B = np.zeros(4)
+        B[0:2] = self._affine_transformation[0:2]
+        b[2:4] = (self._affine_transformation[2:4] - self._affine_transformation[0:2]) * com
+        motor_warped = UtilMP.apply_each_substroke(motor_unwarped, self.affine_warp)
+        return motor_warped
+
+
+    # Affine warp defined by
+    # A(1) * [x y] + [A(2) A(3)]
+    # OR
+    # A(1:2) .* [x y] + [A(3) A(4)]
+    # 
+    # Input
+    # stk [n x 2] stroke
+    # A : [3x1 or 4x1] affine warp
+    @staticmethod
+    def affine_warp(stk, affine):
+        n = stk.shape[0]
+        if affine.shape[0] == 3:
+            stk = affine[0] * stk
+            stk = stk + affine[1:3]
+        else:
+            stk = affine[0:1] * stk
+            stk = stk + affine[2:4]
+
+
+    # apply affine warp and render the image 
+    def apply_render(self):
+        self._motor_warped = apply_warp(self)
+        flat_warped = UtilMP.flatten_substrokes(self._motor_warped)
+        result = render_image(flat_warped, self._epsilon, self._blur_sigma, self._fixed_parameters)
+        pimg = result[0]
+        ink_off_page = result[1]
+        return result
+    
