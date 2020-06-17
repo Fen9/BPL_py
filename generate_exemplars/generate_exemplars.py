@@ -21,7 +21,7 @@ def generate_exemplar(template, lib):
         r: relations = s.get_R()
         print(r)
         if r['type'] == 'mid':
-            r._eval_spot_token = CPD.sample_relation_token(lib, r._eval_spot_type)
+            r.['eval_spot_token'] = CPD.sample_relation_token(lib, r['eval_spot_type'])
         s._pos_token = CPD.sample_position(lib, r, m._strokes[:i])
         s._shapes_token = CPD.sample_shape_token(lib, s._shapes_type)
         s._invscale_token = CPD.sample_invscale_token(lib, s._invscales_type)
