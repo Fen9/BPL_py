@@ -13,10 +13,13 @@ import classes_relations.relations as relations
 
 # %%
 def sample_relation_token(lib, eval_spot_type):
+    # print(eval_spot_type)
     # sample an attachment, but within the bounds as defined by the model
     eval_spot_token = eval_spot_type + lib['tokenvar']['sigma_attach'] * torch.randn()
+    # print(eval_spot_type)
     while not score_relation_token(lib, eval_spot_token, eval_spot_type):
         eval_spot_token = eval_spot_type + lib['tokenvar']['sigma_attach'] * torch.randn()
+    # print(eval_spot_token)
     return eval_spot_token
 
 # simplified from matlab code, not actually scoring, just checking if within bound....
@@ -63,11 +66,11 @@ def sample_position(lib, r, previous_strokes):
     base = relations.getAttachPoint(r, previous_strokes)
     sigma_x = lib['rel']['sigma_x']
     sigma_y = lib['rel']['sigma_y']
-    return dist.Normal(torch.tesnor(base), torch.tensor([sigma_x, sigma_y])).sample()
+    return dist.Normal(torch.tensor(base), torch.tensor([sigma_x, sigma_y])).sample()
 
 # bspline_stack: (ncpt x 2 x k) shapes of bsplines
 def sample_shape_token(lib, bspline_stack):
-    sigma_shape = lib['tokenvar']['signam_shape']
+    sigma_shape = lib['tokenvar']['sigma_shape']
     return bspline_stack + sigma_shape * torch.randn(bspline_stack.shape)
 
 def sample_affine(lib): # just one sample
@@ -86,4 +89,4 @@ def sample_affine(lib): # just one sample
     return A
 
 def sample_image(prob_img):
-    return torch.distributions.Binomial(probs=prob_img).sample() 
+    return torch.distributions.Binomial(probs=prob_img).sample()

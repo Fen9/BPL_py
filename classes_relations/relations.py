@@ -27,13 +27,13 @@ class relation_attach_along(relation):
         self._eval_spot_token
 
 def getAttachPoint(r:relation, previous_strokes):
-    if r._type == 'unihist':
-        return r.gpos
-    elif r._type == 'start':
-        return previous_strokes[r._attach_spot]._motor[0][0,:]
-    elif r._type == 'end':
-        return previous_strokes[r._attach_spot]._motor[-1][-1,:]
-    elif r._type == 'mid':
-        bspline = previous_strokes[r._attach_spot].motor_spline[: ,: ,r._subid_spot]
-        return bspline.bspline_eval(r._eval_spot_token, bspline)
+    if r['type'] == 'unihist':
+        return r['gpos']
+    elif r['type'] == 'start':
+        return previous_strokes[r['attach_spot']]._motor[0][0,:]
+    elif r['type'] == 'end':
+        return previous_strokes[r['attach_spot']]._motor[-1][-1,:]
+    elif r['type'] == 'mid':
+        bspline = previous_strokes[r['attach_spot']].motor_spline[: ,: ,r['subid_spot']]
+        return bspline.bspline_eval(r['eval_spot_token'], bspline)
 
