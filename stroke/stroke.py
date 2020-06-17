@@ -1,5 +1,4 @@
 import copy
-import 
 
 class stroke():
     def __init__(self):
@@ -25,10 +24,10 @@ class stroke():
         self._po
 
     def load_legacy(self, oldS):
-        self._my_type = oldS._my_type
-        self._pos_token = oldS._pos_token
-        self._invscale_token = oldS._invscale_token
-        self._shapes_token = oldS._shapes_token
+        self._my_type = copy.deepcopy(oldS._my_type)
+        self._pos_token = copy.deepcopy(oldS._pos_token)
+        self._invscale_token = copy.deepcopy(oldS._invscale_token)
+        self._shapes_token = copy.deepcopy(oldS._shapes_token)
 
     def get_ids(self):
         return self._ids
