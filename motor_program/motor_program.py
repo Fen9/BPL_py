@@ -1,12 +1,10 @@
 from stroke.stroke import stroke
 import numpy as np
+import copy
 import UtilMP as UtilMP
 
 class motor_program():
     def __init__(self, args):
-        if type(args) == int:
-            pass
-
         self._image = None
         self._strokes = None
         self._fixed_parameters = None
@@ -25,7 +23,17 @@ class motor_program():
         self._cache_prob_img = None
         self._cache_ink_off_page = None
 
-    #
+        if type(args) == int:
+            self._num_strokes = args
+            self._strokes = []
+            for i in range(args):
+                self._strokes.append(stroke())
+        else:
+            self._num_strokes = args._num_strokes
+            for i in range(self._num_strokes):
+                self._strokes = copy.deepcopy(args._strokes)
+            self._fixed_parameters = copy.deepcopy(args._fixed_parameters)
+
 
     # oldMP -> newMP
     def load_legacy(self, oldMP):
@@ -146,29 +154,11 @@ class motor_program():
         cell_traj = UtilMP.flatten_substrokes(motor_unwarped)
         com = com_char(cell_traj)
         B = np.zeros(4)
-        B[0:2] = self._affine_transformation[0:2]
-        b[2:4] = (self._affine_transformation[2:4] - self._affine_transformation[0:2]) * com
-        motor_warped = UtilMP.apply_each_substroke(motor_unwarped, self.affine_warp)
+        B[0:2] = np.array(self._affine_transformation[0:2])
+        B[2:4] = (np.array(self._affine_transformation[2:4]) - np.array(self._affine_transformation[0:2])) * com
+        motor_warped = UtilMP.apply_each_substroke(motor_unwarped, UtilMP.affine_warp, B)
         return motor_warped
 
-
-    # Affine warp defined by
-    # A(1) * [x y] + [A(2) A(3)]
-    # OR
-    # A(1:2) .* [x y] + [A(3) A(4)]
-    # 
-    # Input
-    # stk [n x 2] stroke
-    # A : [3x1 or 4x1] affine warp
-    @staticmethod
-    def affine_warp(stk, affine):
-        n = stk.shape[0]
-        if affine.shape[0] == 3:
-            stk = affine[0] * stk
-            stk = stk + affine[1:3]
-        else:
-            stk = affine[0:1] * stk
-            stk = stk + affine[2:4]
 
 
     # apply affine warp and render the image 
