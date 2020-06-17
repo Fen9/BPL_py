@@ -28,9 +28,8 @@ def generate_exemplar(template, lib):
         s._invscale_token = CPD.sample_invscale_token(lib, s._invscales_type)
         
     m._affine_transformation = CPD.sample_affine(lib)
-    m._blur_sigma = template['parameters']['min_blur_sigma']
-    m._epsilon = template['parameters']['min_epsilon']
-
+    m._blur_sigma = template._fixed_parameters['min_blur_sigma']
+    m._epsilon = template._fixed_parameters['min_epsilon']
     # sample image
     return CPD.sample_image(m.get_prob_img())
 

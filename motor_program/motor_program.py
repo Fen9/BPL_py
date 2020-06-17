@@ -1,7 +1,7 @@
 from stroke.stroke import stroke
 import numpy as np
 import copy
-import UtilMP as UtilMP
+from UtilMP import UtilMP
 from motor_program.helper import render_image
 
 class motor_program():
@@ -67,15 +67,15 @@ class motor_program():
 
     # get pen trajectory (warped)
     def get_motor_warped(self):
-        self._motor_warped = apply_warp(self)
+        self._motor_warped = apply_warp()
         return self._motor_warped
 
     # get probability map of image
     def get_prob_img(self):
-        if self.get_cache_grand_current(self):
+        if self.get_cache_grand_current():
             self._prob_img = self._cache_prob_img
         else:
-            result = apply_render(self)
+            result = self.apply_render()
             self._prob_img = result[0]
             self._ink_off_page = result[1]
             self._cache_prob_img = self._prob_img
@@ -86,10 +86,10 @@ class motor_program():
 
     # is there ink off of the page?
     def get_ink_off_page(self):
-        if get_cache_grand_current(self):
+        if get_cache_grand_current():
             self._ink_off_page = self._cache_ink_off_page
         else:
-            result = apply_render(self)
+            result = apply_render()
             self._prob_img = result[0]
             self._ink_off_page = result[1]
             self._cache_prob_img = self._prob_img
@@ -167,7 +167,7 @@ class motor_program():
 
     # apply affine warp and render the image 
     def apply_render(self):
-        self._motor_warped = apply_warp(self)
+        self._motor_warped = self.apply_warp()
         flat_warped = UtilMP.flatten_substrokes(self._motor_warped)
         result = render_image(flat_warped, self._epsilon, self._blur_sigma, self._fixed_parameters)
         pimg = result[0]

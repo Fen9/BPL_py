@@ -59,7 +59,7 @@ def load_mat_G(path):
     for i in range(len(G['models'])):
         out_G['models'].append(motor_program(0))
         out_G['models'][i]._I = copy.deepcopy(G['models'][i]['I'])
-        out_G['models'][i]._fixed_parameter= copy.deepcopy(G['models'][i]['parameters'])
+        out_G['models'][i]._fixed_parameters= copy.deepcopy(G['models'][i]['parameters'])
         out_G['models'][i]._epsilon= copy.deepcopy(G['models'][i]['epsilon'])
         out_G['models'][i]._blur_sigma = copy.deepcopy(G['models'][i]['blur_sigma'])
         out_G['models'][i]._affine_transformation = np.array(copy.deepcopy(G['models'][i]['A']))
@@ -109,7 +109,7 @@ def load_mat_G(path):
             # print("m = ", m, "i = ", i)
             out_G['samples_type'][m].append(motor_program(0))
             out_G['samples_type'][m][i]._I = copy.deepcopy(G['samples_type'][m][i]['I'])
-            out_G['samples_type'][m][i]._fixed_parameter= copy.deepcopy(G['samples_type'][m][i]['parameters'])
+            out_G['samples_type'][m][i]._fixed_parameters = copy.deepcopy(G['samples_type'][m][i]['parameters'])
             out_G['samples_type'][m][i]._epsilon= copy.deepcopy(G['samples_type'][m][i]['epsilon'])
             out_G['samples_type'][m][i]._blur_sigma = copy.deepcopy(G['samples_type'][m][i]['blur_sigma'])
             out_G['samples_type'][m][i]._affine_transformation = np.array(copy.deepcopy(G['samples_type'][m][i]['A']))

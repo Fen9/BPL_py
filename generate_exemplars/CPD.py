@@ -86,16 +86,28 @@ def sample_affine(lib): # just one sample
     # affine transformation [x-scale,y-scale,x-translate,y-translate]
     # the translation is relative to the center of mass
     # (x-scale and y-scale cannot be 0 or negative)
-    A = torch.zeros((4,))
-    mu_scale = torch.tensor(lib['affine']['mu_scale'])
-    sigma_scale = torch.tensor(lib['affine']['Sigma_scale'])
-    A[:2] = dist.MultivariateNormal(mu_scale, sigma_scale).sample((2,))
-    if (A[:2] > 0).sum() != 2:
+
+    sample_A = np.zeros((1, 4))
+
+    # sample the image scale
+    mu_scale = lib['affine']['mu_scale']
+    sigma_scale = lib['affine']['Sigma_scale']
+    sample_scale = np.random.multivariate_normal(mu_scale, sigma_scale, 1)[0]
+    sample_A[:, 0] = sample_scale[0]
+    sample_A[:, 1] = sample_scale[1]
+
+    # sample the translation
+    m_x = lib['affine']['mu_xtranslate']
+    m_y = lib['affine']['mu_ytranslate']
+    s_x = lib['affine']['sigma_xtranslate']
+    s_y = lib['affine']['sigma_ytranslate']
+    sample_A[:, 2] = np.random.normal(m_x, s_x, 1)
+    sample_A[:, 3] = np.random.normal(m_y, s_y, 1)
+
+    if not sample_A[:,0] > 0 or not sample_A[:,1] > 0:
         print('Warning: sampled scale variable is less than zero')
 
-    A[2] = dist.Normal(lib['affine']['mu_xtranslate'], lib['affine']['sigma_xtranslate']).sample()
-    A[3] = dist.Normal(lib['affine']['mu_ytranslate'], lib['affine']['sigma_ytranslate']).sample()
-    return A
+    return sample_A
 
 def sample_image(prob_img):
-    return torch.distributions.Binomial(probs=prob_img).sample()
+    return np.random.binomial(1, prob_img)

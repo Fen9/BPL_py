@@ -2,7 +2,6 @@ import numpy as np
 
 # flatten a nested cell array, to create a cell array
 # of [nx1] elements
-@staticmethod
 def flatten_substrokes(nested):
     # ncell = 0
     # ns = len(nested)
@@ -16,7 +15,6 @@ def flatten_substrokes(nested):
 
     return vcell
 
-@staticmethod
 def apply_each_substroke(nested, func, B):
     for sid in range(len(nested)):
         for bid in range(len(nested[sid])):
@@ -31,7 +29,6 @@ def apply_each_substroke(nested, func, B):
 # Input
 # stk [n x 2] stroke
 # A : [3x1 or 4x1] affine warp
-@staticmethod
 def affine_warp(stk, affine):
     n = stk.shape[0]
     if affine.shape[0] == 3:
