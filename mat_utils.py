@@ -69,11 +69,15 @@ def load_mat_G(path):
 
         out_G['models'][i]._motor = []
         for j in range(len(G['models'][i]['motor'])):
-            out_G['models'][i]._motor.append([G['models'][0]['motor'][j][0]['val']])
+            out_G['models'][i]._motor.append([])
+            for k in range(len(G['models'][i]['motor'][j])):
+                out_G['models'][i]._motor[j].append(copy.deepcopy(G['models'][i]['motor'][j][k]['val']))
 
         out_G['models'][i]._motor_warped = []
         for j in range(len(G['models'][i]['motor_warped'])):
-            out_G['models'][i]._motor_warped.append([G['models'][0]['motor_warped'][j][0]['val']])
+            out_G['models'][i]._motor_warped.append([])
+            for k in range(len(G['models'][i]['motor_warped'][j])):
+                out_G['models'][i]._motor_warped[j].append(copy.deepcopy(G['models'][i]['motor_warped'][j][k]['val']))
 
         out_G['models'][i]._cache_grant_curent = copy.deepcopy(G['models'][i]['ink_off_page'])
     
@@ -89,7 +93,10 @@ def load_mat_G(path):
             s._invscale_token = copy.deepcopy(G['models'][i]['S'][j]['invscales_token'])
             s._shapes_token = copy.deepcopy(G['models'][i]['S'][j]['shapes_token'])
             s._nsub = copy.deepcopy(G['models'][i]['S'][j]['nsub'])
-            s._motor = copy.deepcopy(G['models'][i]['S'][j]['motor'][0]['val'])
+
+            s._motor = []
+            for k in range(len(G['models'][i]['S'][j]['motor'])):
+                s._motor.append(copy.deepcopy(G['models'][i]['S'][j]['motor'][k]['val']))
             s._motor_spline = copy.deepcopy(G['models'][i]['S'][j]['motor_spline'])
             out_G['models'][i]._stroke.append(s)
 
