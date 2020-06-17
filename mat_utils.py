@@ -104,6 +104,7 @@ def load_mat_G(path):
     for m in range(0, len(G['samples_type'])):
         out_G['samples_type'].append([])
         for i in range(0, len(G['samples_type'][m])):
+            # print("m = ", m, "i = ", i)
             out_G['samples_type'][m].append(motor_program(0))
             out_G['samples_type'][m][i]._I = copy.deepcopy(G['samples_type'][m][i]['I'])
             out_G['samples_type'][m][i]._fixed_parameter= copy.deepcopy(G['samples_type'][m][i]['parameters'])
@@ -128,7 +129,7 @@ def load_mat_G(path):
 
             out_G['samples_type'][m][i]._cache_grant_curent = copy.deepcopy(G['samples_type'][m][i]['ink_off_page'])
         
-            out_G['samples_type'][m][i]._stroke = []
+            out_G['samples_type'][m][i]._strokes = []
             for j in range(0, len(G['samples_type'][m][i]['S'])):
                 s = stroke()
                 s._my_type = copy.deepcopy(G['samples_type'][m][i]['S'][j]['myType'])
@@ -145,8 +146,7 @@ def load_mat_G(path):
                 for k in range(len(G['samples_type'][m][i]['S'][j]['motor'])):
                     s._motor.append(copy.deepcopy(G['samples_type'][m][i]['S'][j]['motor'][k]['val']))
                 s._motor_spline = copy.deepcopy(G['samples_type'][m][i]['S'][j]['motor_spline'])
-                out_G['samples_type'][m][i]._stroke.append(s)
-            print(len(out_G['samples_type'][m][i]._strokes))
+                out_G['samples_type'][m][i]._strokes.append(s)
     return out_G
 
 if __name__ == "__main__":

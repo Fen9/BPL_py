@@ -46,11 +46,10 @@ def task_generate_exemplars(G, lib, num_exemplars):
         Q._I = copy.deepcopy(M._I)
 
         types[i] = copy.deepcopy(Q)
-        print(Q._num_strokes)
-        print(Q._strokes)
-        exit()
         Q = generate_exemplar(copy.deepcopy(Q), lib)
         samples[i] = copy.deepcopy(Q)
+        print(samples[i])
+    print(samples)
 
 
 def task_generate_exemplars_1overk(G, lib, num_exemplars):

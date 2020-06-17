@@ -16,10 +16,11 @@ def generate_exemplar(template, lib):
     m: motor_program = motor_program(template)
 
     for i in range(m._num_strokes):
-        print(len(m._strokes))
+        # print(len(m._strokes))
         s: stroke = m._strokes[i]
         r: relations = s.get_R()
-        if r._type == 'mid':
+        print(r)
+        if r['type'] == 'mid':
             r._eval_spot_token = CPD.sample_relation_token(lib, r._eval_spot_type)
         s._pos_token = CPD.sample_position(lib, r, m._strokes[:i])
         s._shapes_token = CPD.sample_shape_token(lib, s._shapes_type)
