@@ -36,6 +36,9 @@ def getAttachPoint(r, previous_strokes):
     elif r['type'] == 'mid':
         motor_spline = previous_strokes[r['attach_spot']-1]._motor_spline
         # bspline = motor_spline[: ,: ,r['subid_spot']-1]
-        bspline = motor_spline[: ,r['subid_spot']-1]
-        return bspline.bspline_eval(r['eval_spot_token'], bspline)
+        if motor_spline.ndim == 2:
+            b = motor_spline
+        else: # 3
+            b = motor_spline [:, :, r['subid_spot'] - 1]
+        return b.bspline_eval(r['eval_spot_token'], b)
 
