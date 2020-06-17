@@ -6,7 +6,7 @@ from scipy.io import loadmat
 from scipy.special import logsumexp
 import scipy.io as sio
 
-from mat_utils import process_mat
+from mat_utils import load_mat_G, process_mat
 from generate_exemplars.generate_exemplars import generate_exemplar
 
 parser = argparse.ArgumentParser(description='BPL Python Version')
@@ -41,12 +41,15 @@ def task_generate_exemplars(G, lib, num_exemplars):
         # choose the parse
         M, idx = rand_discrete(G['models'], wts)
         # choose the type-level resampling
-        Q = rand_discrete(G['samples_type'][idx], np.ones(len(G['samples_type']))/np.sum(np.ones(len(G['samples_type']))))
-        Q = Q.copy()
-        Q.I = copy.deepcopy(M.I)
+        Q, _ = rand_discrete(G['samples_type'][idx], np.ones(len(G['samples_type']))/np.sum(np.ones(len(G['samples_type']))))
+        # Q = Q.copy()
+        Q._I = copy.deepcopy(M._I)
 
         types[i] = copy.deepcopy(Q)
-        Q = generate_exemplar(Q.copy(), lib)
+        print(Q._num_strokes)
+        print(Q._strokes)
+        exit()
+        Q = generate_exemplar(copy.deepcopy(Q), lib)
         samples[i] = copy.deepcopy(Q)
 
 
@@ -60,8 +63,7 @@ def main():
     character_id = args.character_id
     num_exemplars = args.num_exemplars
     file_name = args.path + str(character_id) +'G.mat'
-    G_py = sio.loadmat(file_name, squeeze_me=True)['G']
-    G = process_mat(G_py)
+    G = load_mat_G(file_name)
     lib_py = sio.loadmat("lib_py.mat", squeeze_me=True)['lib_py']
     lib = process_mat(lib_py)
     task_generate_exemplars_1overk(G, lib, num_exemplars)

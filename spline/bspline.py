@@ -1,6 +1,6 @@
 def get_stk_from_bspline(P, neval):
     nland = P.shape
-    
+
 def bspline_gen_s(nland,neval):
     lb = 2
     ub = nland + 1 

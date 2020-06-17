@@ -137,4 +137,4 @@ def vanilla_to_motor(vanilla_shapes, invscales, first_ops):
                 offset = motor[i][0,:] - motor[i-1][-1, :]
             
             motor[i] = offset_stk(motor[i], offset)
-            motor_spline[:,:,i] = motor_spline[:,:,i] - repmat(offset, [ncpt 1])
+            # motor_spline[:,:,i] = motor_spline[:,:,i] - repmat(offset, [ncpt 1])

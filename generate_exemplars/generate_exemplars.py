@@ -8,7 +8,7 @@ pyro.enable_validation(True)
 
 from motor_program.motor_program import motor_program
 from stroke.stroke import stroke
-from classes_relations.relations import relations
+from classes_relations.relations import relation
 import generate_exemplars.CPD as CPD
 # %% 
 
@@ -16,7 +16,8 @@ def generate_exemplar(template, lib):
     m: motor_program = motor_program(template)
 
     for i in range(m._num_strokes):
-        s: stroke = m.get_strokes(i)
+        print(len(m._strokes))
+        s: stroke = m._strokes[i]
         r: relations = s.get_R()
         if r._type == 'mid':
             r._eval_spot_token = CPD.sample_relation_token(lib, r._eval_spot_type)
