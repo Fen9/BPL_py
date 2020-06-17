@@ -39,5 +39,5 @@ def process_mat(x):
             ret[key] = process_mat(x[key].item())
     return ret
 
-G_py = sio.loadmat("G/35G.mat", squeeze_me=True)['G']
-G = process_mat(G_py)
+# G_py = sio.loadmat("G/35G.mat", squeeze_me=True)['G']
+# G = process_mat(G_py)
