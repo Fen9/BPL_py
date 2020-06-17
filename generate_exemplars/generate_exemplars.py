@@ -23,6 +23,7 @@ def generate_exemplar(template, lib):
             r['eval_spot_token'] = CPD.sample_relation_token(lib, r['eval_spot_type'])
         s._pos_token = CPD.sample_position(lib, r, m._strokes[:i])
         s._shapes_token = CPD.sample_shape_token(lib, s._shapes_type)
+        # print(s._invscales_type)
         s._invscale_token = CPD.sample_invscale_token(lib, s._invscales_type)
         
     m._affine_transformation = CPD.sample_affine(lib)

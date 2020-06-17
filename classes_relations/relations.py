@@ -26,7 +26,7 @@ class relation_attach_along(relation):
         self._eval_spot_type
         self._eval_spot_token
 
-def getAttachPoint(r:relation, previous_strokes):
+def getAttachPoint(r, previous_strokes):
     if r['type'] == 'unihist':
         return r['gpos']
     elif r['type'] == 'start':

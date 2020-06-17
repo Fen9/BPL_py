@@ -2,6 +2,7 @@
 import pyro
 import pyro.distributions as dist
 import torch
+import numpy as np
 
 # enable validation (e.g. validate parameters of distributions)
 pyro.enable_validation(True)
@@ -15,16 +16,18 @@ import classes_relations.relations as relations
 def sample_relation_token(lib, eval_spot_type):
     # print(eval_spot_type)
     # sample an attachment, but within the bounds as defined by the model
-    eval_spot_token = eval_spot_type + lib['tokenvar']['sigma_attach'] * torch.randn()
+    sigma_attach = torch.tensor(lib['tokenvar']['sigma_attach'])
+    eval_spot_token = eval_spot_type + sigma_attach * torch.randn((1, ))
     # print(eval_spot_type)
     while not score_relation_token(lib, eval_spot_token, eval_spot_type):
-        eval_spot_token = eval_spot_type + lib['tokenvar']['sigma_attach'] * torch.randn()
+        eval_spot_token = eval_spot_type + sigma_attach * torch.randn((1, ))
     # print(eval_spot_token)
     return eval_spot_token
 
 # simplified from matlab code, not actually scoring, just checking if within bound....
 def score_relation_token(lib, eval_spot_token, eval_spot_type):
-    _, lb, ub = bspline.bspline_gen_s(lib['ncpt'], 1)
+    # _, lb, ub = bspline.bspline_gen_s(lib['ncpt'], 1)
+    lb, ub = bspline.bspline_gen_s(lib['ncpt'], 1)
     if eval_spot_token < lb or eval_spot_token > ub: # out of bound
         return False
     return True
@@ -32,10 +35,13 @@ def score_relation_token(lib, eval_spot_token, eval_spot_type):
 def sample_invscale_token(lib, invscales_type):
     # Gaussian noise, but don't allow negative scales.
     # Sampling is done by rejection sampling
-    sz = invscales_type.shape
-    invscales_token = invscales_type + lib['tokenvar']['sigma_invscale'] * torch.randn(sz)
+    # sz = invscales_type.shape
+    sz = 1
+    invscales_type = torch.tensor(invscales_type)
+    sigma_invscale = torch.tensor(lib['tokenvar']['sigma_invscale'])
+    invscales_token = invscales_type + sigma_invscale * torch.randn(sz)
     while not score_invscale_token(lib, invscales_token, invscales_type):
-        invscales_token = invscales_type + lib['tokenvar']['sigma_invscale'] * torch.randn(sz)
+        invscales_token = invscales_type + sigma_invscale * torch.randn(sz)
     return invscales_token
 
 # simplified from matlab code, not actually scoring, just checking if within bound....
@@ -45,7 +51,8 @@ def score_invscale_token(lib, invscales_token, invscales_type):
     # log of multivariate normal density <= 0
     # don't allow invscales that are negative
     # TODO: not too sure about this one
-    return dist.MultivariateNormal(invscales_type, torch.eye(invscales_type.size()) * lib['tokenvar']['sigma_invscale']).log_prob(invscales_token) > 0
+    return torch.all(dist.Normal(invscales_type, lib['tokenvar']['sigma_invscale']).log_prob(invscales_token) > 0).item()
+    # return dist.MultivariateNormal(invscales_type, torch.eye(1) * lib['tokenvar']['sigma_invscale']).log_prob(invscales_token) > 0
 
 # # ns: number of strokes in the character
 # def sample_substroke_number(lib, ns): 
@@ -71,7 +78,8 @@ def sample_position(lib, r, previous_strokes):
 # bspline_stack: (ncpt x 2 x k) shapes of bsplines
 def sample_shape_token(lib, bspline_stack):
     sigma_shape = lib['tokenvar']['sigma_shape']
-    return bspline_stack + sigma_shape * torch.randn(bspline_stack.shape)
+    ret = torch.from_numpy(bspline_stack) + torch.tensor(sigma_shape) * torch.randn(bspline_stack.shape)
+    return ret
 
 def sample_affine(lib): # just one sample
     # affine transformation [x-scale,y-scale,x-translate,y-translate]
