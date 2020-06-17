@@ -1,8 +1,11 @@
 # %%
 import scipy.io as sio
 import torch
+import numpy
 
-lib_py = sio.loadmat("lib_py.mat", squeeze_me=True)['lib_py']
+# %%
+# lib_py = sio.loadmat("lib_py.mat", squeeze_me=True)['lib_py']
+
 
 # %%
 def convert_object_to_tensor(x):
@@ -16,23 +19,25 @@ def convert_to_dict_of_tensors(x):
     return ret
 
 # %%
-# [n x 1] probability of each number of strokes (starts at 1)
-pkappa = convert_object_to_tensor(lib_py['pkappa'])
+def process_mat(x):
+    # print(type(x))
+    if type(x) != numpy.ndarray:
+        return x
+    keys = x.dtype.names
+    if keys is None:
+        return x
+    # print(list(keys))
+    if keys[0] == "cell1": # TODO
+        ret = []
+        for key in keys:
+            # print(key)
+            ret.append(process_mat(x[key].item()))
+    else:
+        ret = {}
+        for key in keys:
+            # print(key)
+            ret[key] = process_mat(x[key].item())
+    return ret
 
-# number of control points
-ncpt = convert_object_to_tensor(lib_py['ncpt'])
-
-# relations
-rel = convert_to_dict_of_tensors(lib_py['rel'].item())
-
-# P(n_i | \kappa)
-pmat_nsub = convert_object_to_tensor(lib_py['pmat_nsub'])
-
-# .sigma_shape,sigma_invscale
-tokenvar = convert_to_dict_of_tensors(lib_py['tokenvar'].item())
-
-# [N x 1] log-prob of beginning in each state
-logStart = convert_object_to_tensor(lib_py['logStart'])
-
-# %% the cell arrays in matlab can be accessed "cell" + index
-test_cell = lib_py['Spatial'].item()['list_SH'].item()['cell1'].item()['logpYX'].item()
+G_py = sio.loadmat("G/35G.mat", squeeze_me=True)['G']
+G = process_mat(G_py)
