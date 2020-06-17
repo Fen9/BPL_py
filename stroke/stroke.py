@@ -114,7 +114,7 @@ class stroke():
         event.AffectedObject.cache_current = False
 
 
-def vanilla_to_motor(vanilla_shapes, invscales, firest_ops):
+def vanilla_to_motor(vanilla_shapes, invscales, first_ops):
     if np.all(vanilla_shapes==0) or np.all(invscales == 0) or np.all(first_ops==0):
         motor = []
         motor_spline = []
@@ -124,6 +124,17 @@ def vanilla_to_motor(vanilla_shapes, invscales, firest_ops):
         for i in range(0, n):
             vanilla_shapes[:,:,i] = invscales[i] * vanilla_shapes[:,:i]
 
-        vanilla_traj = np.array((n, 1))
+        vanilla_traj = [None for i in range(0, n)]
         for i in range(0, n):
-            pass
+            vanilla_traj[i] = get_stk_from_bspline(vanilla_shapes[:,:,i])
+
+        motor = vanilla_traj
+        motor_spline = vanilla_shapes
+        for i in range(0, n):
+            if i == 0:
+                offset = motor[0][0,:] - first_ops
+            else:
+                offset = motor[i][0,:] - motor[i-1][-1, :]
+            
+            motor[i] = offset_stk(motor[i], offset)
+            motor_spline[:,:,i] = motor_spline[:,:,i] - repmat(offset, [ncpt 1])
