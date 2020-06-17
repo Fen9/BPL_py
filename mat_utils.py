@@ -3,6 +3,7 @@ import scipy.io as sio
 import torch
 import numpy as np
 from motor_program.motor_program import motor_program
+from stroke.stroke import stroke
 import copy
 
 # %%
@@ -70,20 +71,34 @@ def load_mat_G(path):
         for j in range(len(G['models'][i]['motor'])):
             out_G['models'][i]._motor.append([G['models'][0]['motor'][j][0]['val']])
 
-        out_G['models'][i]._motor = []
+        out_G['models'][i]._motor_warped = []
         for j in range(len(G['models'][i]['motor_warped'])):
             out_G['models'][i]._motor_warped.append([G['models'][0]['motor_warped'][j][0]['val']])
 
         out_G['models'][i]._cache_grant_curent = copy.deepcopy(G['models'][i]['ink_off_page'])
     
-        out_G['models'][i]._stroke = # todo
-        
+        out_G['models'][i]._stroke = []
+        for j in range(0, len(G['models'][i]['S'])):
+            s = stroke()
+            s._my_type = copy.deepcopy(G['models'][i]['S'][j]['myType'])
+            # s._lh = copy.deepcopy(G['models'][i]['S'][j]['lh'])
+            s._R = copy.deepcopy(G['models'][i]['S'][j]['R'])
+            s._ids = copy.deepcopy(G['models'][i]['S'][j]['ids'])
+            s._invscales_type = copy.deepcopy(G['models'][i]['S'][j]['invscales_type'])
+            s._pos_token = copy.deepcopy(G['models'][i]['S'][j]['pos_token'])
+            s._invscale_token = copy.deepcopy(G['models'][i]['S'][j]['invscales_token'])
+            s._shapes_token = copy.deepcopy(G['models'][i]['S'][j]['shapes_token'])
+            s._nsub = copy.deepcopy(G['models'][i]['S'][j]['nsub'])
+            s._motor = copy.deepcopy(G['models'][i]['S'][j]['motor'][0]['val'])
+            s._motor_spline = copy.deepcopy(G['models'][i]['S'][j]['motor_spline'])
+            out_G['models'][i]._stroke.append(s)
+
     return out_G
 
 if __name__ == "__main__":
     G_py = sio.loadmat("./model/G/35G.mat", squeeze_me=True)['G']
     G = process_mat(G_py)
     load_mat_G("./model/G/35G.mat")
-    print((G['models'][0]['motor'][0][0]['val']))
-    print(len(G['models'][0]['motor']))
+    # print((G['models'][0]['motor'][0][0]['val']))
+    # print(G['models'][0]['S'][0]['motor'])
 
