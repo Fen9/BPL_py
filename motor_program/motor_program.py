@@ -158,18 +158,15 @@ class motor_program():
             return
         
         cell_traj = UtilMP.flatten_substrokes(motor_unwarped)
+
         com = com_char(cell_traj)
         B = np.zeros(4)
         self._affine_transformation = self._affine_transformation.reshape(np.prod(self._affine_transformation.shape))
-        # print("inside apply_warp, B = ", B)
-        # print("inside apply_warp, A = ", np.array(self._affine_transformation))
+
         B[0:2] = np.array(self._affine_transformation[0:2])
-        B[2:4] = (np.array(self._affine_transformation[2:4]) - np.array(self._affine_transformation[0:2])) * com
-        # print("inside apply_warp, B = ", B)
-        # print("inside apply_warp, motor_unwarped = ", motor_unwarped)
+        B[2:4] = np.array(self._affine_transformation[2:4]) - np.multiply(np.array(self._affine_transformation[0:2]-1), com)
+
         motor_warped = UtilMP.apply_each_substroke(motor_unwarped, UtilMP.affine_warp, B)
-        # print("inside apply_warp, motor_warped = ", motor_warped)
-        # print("inside apply_warp, motor_unwarped = ", motor_unwarped)
         return motor_warped
 
 
@@ -177,7 +174,6 @@ class motor_program():
     # apply affine warp and render the image 
     def apply_render(self):
         self._motor_warped = self.apply_warp()
-        # print("inside apply_render, motor_warped = ", self._motor_warped)
         flat_warped = UtilMP.flatten_substrokes(self._motor_warped)
         result = render_image(flat_warped, self._epsilon, self._blur_sigma, self._fixed_parameters)
         pimg = result[0]

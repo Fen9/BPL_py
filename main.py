@@ -8,6 +8,7 @@ import scipy.io as sio
 
 from mat_utils import load_mat_G, process_mat
 from generate_exemplars.generate_exemplars import generate_exemplar
+import matplotlib.pylab as plt
 
 parser = argparse.ArgumentParser(description='BPL Python Version')
 parser.add_argument('--character_id', type=int, default=35)
@@ -50,7 +51,12 @@ def task_generate_exemplars(G, lib, num_exemplars):
         samples[i] = copy.deepcopy(Q)
         print(samples[i])
     print(samples)
-
+    samples = np.array(samples)
+    for i in range((samples).shape[0]):
+        img = samples[i,:,:].reshape(105,105)
+        plt.imshow(img)
+        plt.colorbar()
+        plt.show()
 
 def task_generate_exemplars_1overk(G, lib, num_exemplars):
     wts = rescore_by_rank(G['scores'])

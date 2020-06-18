@@ -8,15 +8,15 @@ def space_motor_to_img(cell_traj):
         cell_traj[i] = np.array(cell_traj[i])
         if cell_traj[i].shape[1] != 2:
             cell_traj[i] = np.transpose(cell_traj[i])
-            t = np.transpose(np.array([-cell_traj[:,1], cell_traj[:,0]])) + 1
-            traj_img.append(t)
+        t = np.transpose(np.array([-cell_traj[i][:,1], cell_traj[i][:,0]])) + 1
+        traj_img.append(t)
     return traj_img
 
 # approximate equal
 def aeq(x, y, tol=np.finfo(float).eps*(10**10)):
-    if x.shape != y.shape:
-        print("error: x, y should have the same shape")
-        exit(-1)
+    # if x.shape != y.shape:
+    #     print("error: x, y should have the same shape")
+    #     exit(-1)
     z = np.abs(x-y) < tol
     return np.all(z)
 
@@ -60,7 +60,6 @@ def render_image(cell_traj, epsilon, blur_sigma, PM):
         # check bc
         myt = traj_img[i]   # should be np.array with shape (N,2)
         if myt.shape[1] != 2:
-            print("myt shape:", myt.shape)
             myt = np.transpose(myt)
 
         out = check_bounds(myt, PM['imsize'])   # out is a list with len N
@@ -84,7 +83,7 @@ def render_image(cell_traj, epsilon, blur_sigma, PM):
             for i in range(dist.shape[0]):
                 if dist[i] > max_dist:
                     dist[i] = max_dist
-            np.insert(dist, 0, dist[0])
+            dist = np.insert(dist, 0, dist[0])
             myink = np.multiply(dist, ink/max_dist)         # myink is a np.array of shape (N,1)
 
         # make sure we have the minimum amount of ink
@@ -120,7 +119,6 @@ def render_image(cell_traj, epsilon, blur_sigma, PM):
     # filter the iamge to get the desired burhs-stroke size 
     a = PM['ink_a']
     b = PM['ink_b']
-    # print("inside render_image, a, b = ", a, b)
     H_broaden = np.multiply(np.array([[a/12., a/6., a/12],[a/6., 1.-a, a/6.], [a/12., a/6., a/12]]), b)
     widen = template
     for i in range(PM['ink_ncon']):
@@ -161,7 +159,8 @@ def seqadd(data, xp, yp, inkval):
         print("ERROR: xp and yp should have the same shape")
     if xp.shape[0] != inkval.shape[0]:
         print("ERROR: xp and inkval should have the same shape")
-    data[xp, yp] = data[xp, yp] + inkval
+    for i in range(xp.shape[0]):
+        data[int(xp[i]), int(yp[i])] += inkval[i]
     return data
 
 def check_bounds(myt, imsize):
@@ -176,7 +175,7 @@ def check_bounds(myt, imsize):
             out.append(0)
     return out
 
-def pari_dist(D):
+def pair_dist(D):
     x1 = D[0:-1, :]
     x2 = D[1:, :]
     z = np.sqrt(np.sum(np.square(x1-x2), axis=1))
@@ -191,7 +190,6 @@ def pari_dist(D):
 # Output
 #    COM: [scalar] center of mass
 def com_char(char):
-    # print("inside com_char, char = ", char)
     ns = len(char)
     lens = np.zeros([ns,1])
     wsum = np.zeros([ns,2])
@@ -201,6 +199,5 @@ def com_char(char):
        wsum[i,:] = np.mean(stk, axis=0) * lens[i]
     
     COM = np.sum(wsum, axis=0) / np.sum(lens)
-    # print("COM = ", COM)
     return COM
 

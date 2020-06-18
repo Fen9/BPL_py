@@ -10,27 +10,29 @@ from motor_program.motor_program import motor_program
 from stroke.stroke import stroke
 from classes_relations.relations import relation
 import generate_exemplars.CPD as CPD
+import matplotlib.pylab as plt
 # %% 
 
 def generate_exemplar(template, lib):
     m: motor_program = motor_program(template)
 
     for i in range(m._num_strokes):
-        print(i)
-        # print(len(m._strokes))
         s: stroke = m._strokes[i]
         r: relations = s.get_R()
         if r['type'] == 'mid':
             r['eval_spot_token'] = CPD.sample_relation_token(lib, r['eval_spot_type'])
         s._pos_token = CPD.sample_position(lib, r, m._strokes[:i])
         s._shapes_token = CPD.sample_shape_token(lib, s._shapes_type)
-        # print(s._invscales_type)
         s._invscale_token = CPD.sample_invscale_token(lib, s._invscales_type)
         
     m._affine_transformation = CPD.sample_affine(lib)
     m._blur_sigma = template._fixed_parameters['min_blur_sigma']
     m._epsilon = template._fixed_parameters['min_epsilon']
     # sample image
+    print(m.get_prob_img())
+    plt.imshow(m._prob_img)
+    plt.colorbar()
+    plt.show()
     return CPD.sample_image(m.get_prob_img())
 
 
