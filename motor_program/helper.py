@@ -68,7 +68,7 @@ def render_image(cell_traj, epsilon, blur_sigma, PM):
             non_out_index = []
             for idx in range(len(out)):
                 if out[idx] == 0:
-                    non_out_index.append[idx]
+                    non_out_index.append(idx)
         else:
             non_out_index = [i for i in range(len(out))]
         myt = myt[non_out_index, :]
