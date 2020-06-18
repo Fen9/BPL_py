@@ -30,8 +30,8 @@ def generate_exemplar(template, lib):
     m._epsilon = template._fixed_parameters['min_epsilon']
     # sample image
     print(m.get_prob_img())
-    plt.imshow(m._prob_img)
-    plt.colorbar()
+    plt.imshow(1 - m._prob_img, cmap='gray', vmin=0, vmax=1)
+    # plt.colorbar()
     plt.show()
     return CPD.sample_image(m.get_prob_img())
 

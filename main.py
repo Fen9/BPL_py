@@ -54,8 +54,8 @@ def task_generate_exemplars(G, lib, num_exemplars):
     samples = np.array(samples)
     for i in range((samples).shape[0]):
         img = samples[i,:,:].reshape(105,105)
-        plt.imshow(img)
-        plt.colorbar()
+        plt.imshow(1 - img, cmap='gray', vmin=0, vmax=1)
+        # plt.colorbar()
         plt.show()
 
 def task_generate_exemplars_1overk(G, lib, num_exemplars):
