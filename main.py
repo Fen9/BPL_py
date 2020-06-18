@@ -37,7 +37,6 @@ def task_generate_exemplars(G, lib, num_exemplars):
     wts = np.exp(log_wts - logsumexp(log_wts))
     samples = [None for i in range(0, num_exemplars)]
     types = [None for i in range(0, num_exemplars)]
-
     for i in range(0, num_exemplars):
         # choose the parse
         M, idx = rand_discrete(G['models'], wts)
@@ -45,18 +44,35 @@ def task_generate_exemplars(G, lib, num_exemplars):
         Q, q_idx = rand_discrete(G['samples_type'][idx], np.ones(len(G['samples_type']))/np.sum(np.ones(len(G['samples_type']))))
         # Q = Q.copy()
         Q._I = copy.deepcopy(M._I)
-
+        I = copy.deepcopy(M._I)
         types[i] = copy.deepcopy(Q)
         Q = generate_exemplar(copy.deepcopy(Q), lib)
         samples[i] = copy.deepcopy(Q)
-        print(samples[i])
-    print(samples)
-    samples = np.array(samples)
-    for i in range((samples).shape[0]):
-        img = samples[i,:,:].reshape(105,105)
-        plt.imshow(1 - img, cmap='gray', vmin=0, vmax=1)
-        # plt.colorbar()
-        plt.show()
+        # print(samples[i])
+    # print(samples)
+    # samples = np.array(samples)
+
+    plot_figure(G["img"], samples)
+
+# assume 9 examples
+def plot_figure(ori, gen):
+    fig, axs = plt.subplots(4, 3)
+    axs[0, 1].imshow(1 - ori, cmap='gray', vmin=0, vmax=1)
+    axs[0, 1].title.set_text('original')
+    axs[0, 1].axis('off')
+
+    axs[0, 0].axis('off')
+    axs[0, 2].axis('off')
+
+    for i in range(len(gen)):
+        x1 = i // 3 + 1
+        x2 = i - 3 * x1
+        img = gen[i][:,:].reshape(105,105)
+        axs[x1, x2].imshow(1 - img, cmap='gray', vmin=0, vmax=1)
+        axs[x1, x2].axis('off')
+        print(i)
+    axs[1, 0].title.set_text('new exemplars')
+    fig.savefig('gen.png', bbox_inches='tight')
 
 def task_generate_exemplars_1overk(G, lib, num_exemplars):
     wts = rescore_by_rank(G['scores'])

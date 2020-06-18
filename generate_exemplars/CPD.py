@@ -14,7 +14,7 @@ import classes_relations.relations as relations
 
 # %%
 def sample_relation_token(lib, eval_spot_type):
-    print("sample_relation_token")
+    # print("sample_relation_token")
     # print(eval_spot_type)
     # sample an attachment, but within the bounds as defined by the model
     sigma_attach = torch.tensor(lib['tokenvar']['sigma_attach'])

@@ -29,10 +29,10 @@ def generate_exemplar(template, lib):
     m._blur_sigma = template._fixed_parameters['min_blur_sigma']
     m._epsilon = template._fixed_parameters['min_epsilon']
     # sample image
-    print(m.get_prob_img())
-    plt.imshow(1 - m._prob_img, cmap='gray', vmin=0, vmax=1)
-    # plt.colorbar()
-    plt.show()
+    # print(m.get_prob_img())
+    # plt.imshow(1 - m._prob_img, cmap='gray', vmin=0, vmax=1)
+    # plt.axis('off')
+    # plt.show()
     return CPD.sample_image(m.get_prob_img())
 
 
