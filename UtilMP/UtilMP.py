@@ -16,9 +16,12 @@ def flatten_substrokes(nested):
     return vcell
 
 def apply_each_substroke(nested, func, B):
+    # print("inside apply_each_substroke, nested = ", nested)
     for sid in range(len(nested)):
         for bid in range(len(nested[sid])):
-            nested[i][j] = func(nested[i][j], B)
+            nested[sid][bid] = func(nested[sid][bid], B)
+    # print("inside apply_each_substroke, nested = ", nested)
+    return nested
 
 
 # Affine warp defined by
@@ -37,3 +40,4 @@ def affine_warp(stk, affine):
     else:
         stk = affine[0:1] * stk
         stk = stk + affine[2:4]
+    return stk

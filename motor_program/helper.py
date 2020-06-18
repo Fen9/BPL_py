@@ -120,7 +120,8 @@ def render_image(cell_traj, epsilon, blur_sigma, PM):
     # filter the iamge to get the desired burhs-stroke size 
     a = PM['ink_a']
     b = PM['ink_b']
-    H_broaden = np.multiply(np.array[[a/12., a/6., a/12],[a/6., 1.-a, a/6.], [a/12., a/6., a/12]], b)
+    # print("inside render_image, a, b = ", a, b)
+    H_broaden = np.multiply(np.array([[a/12., a/6., a/12],[a/6., 1.-a, a/6.], [a/12., a/6., a/12]]), b)
     widen = template
     for i in range(PM['ink_ncon']):
         widen = scipy.ndimage.convolve(widen, H_broaden, mode='nearest')
@@ -181,5 +182,25 @@ def pari_dist(D):
     z = np.sqrt(np.sum(np.square(x1-x2), axis=1))
     return z
 
-
+#  Get the overall center-of-mass for
+#  a character
+# 
+# Input
+#   char: [ns x 1 cell] array of strokes
+# 
+# Output
+#    COM: [scalar] center of mass
+def com_char(char):
+    # print("inside com_char, char = ", char)
+    ns = len(char)
+    lens = np.zeros([ns,1])
+    wsum = np.zeros([ns,2])
+    for i in range(ns):
+       stk = char[i]
+       lens[i] = np.array(stk).shape[0]
+       wsum[i,:] = np.mean(stk, axis=0) * lens[i]
+    
+    COM = np.sum(wsum, axis=0) / np.sum(lens)
+    # print("COM = ", COM)
+    return COM
 

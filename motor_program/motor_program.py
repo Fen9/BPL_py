@@ -2,7 +2,7 @@ from stroke.stroke import stroke
 import numpy as np
 import copy
 from UtilMP import UtilMP
-from motor_program.helper import render_image
+from motor_program.helper import render_image, com_char
 
 class motor_program():
     def __init__(self, args):
@@ -59,10 +59,12 @@ class motor_program():
     
     # get pen trajectory (un-warped)
     def get_motor(self):
-        ns = get_num_strokes()
+        ns = self.get_num_strokes()
         self._motor = []
         for i in range(ns):
-            self._motor.append(self._strokes[i]._motor)
+            # print("inside get_motor, strokes.motor = ", self._strokes[i]._motor)
+            self._motor.append(copy.deepcopy(self._strokes[i]._motor))
+        # print("inside get_motor, _motor = ", self._motor)
         return self._motor
 
     # get pen trajectory (warped)
@@ -150,7 +152,7 @@ class motor_program():
     # apply affine transformation to the stroke trajectories
     # and return a nested cell aray
     def apply_warp(self):
-        motor_unwarped = self._motor
+        motor_unwarped = copy.deepcopy(self.get_motor())
         if np.all(self._affine_transformation) == 0:
             motor_warped = motor_unwarped
             return
@@ -158,9 +160,16 @@ class motor_program():
         cell_traj = UtilMP.flatten_substrokes(motor_unwarped)
         com = com_char(cell_traj)
         B = np.zeros(4)
+        self._affine_transformation = self._affine_transformation.reshape(np.prod(self._affine_transformation.shape))
+        # print("inside apply_warp, B = ", B)
+        # print("inside apply_warp, A = ", np.array(self._affine_transformation))
         B[0:2] = np.array(self._affine_transformation[0:2])
         B[2:4] = (np.array(self._affine_transformation[2:4]) - np.array(self._affine_transformation[0:2])) * com
+        # print("inside apply_warp, B = ", B)
+        # print("inside apply_warp, motor_unwarped = ", motor_unwarped)
         motor_warped = UtilMP.apply_each_substroke(motor_unwarped, UtilMP.affine_warp, B)
+        # print("inside apply_warp, motor_warped = ", motor_warped)
+        # print("inside apply_warp, motor_unwarped = ", motor_unwarped)
         return motor_warped
 
 
@@ -168,6 +177,7 @@ class motor_program():
     # apply affine warp and render the image 
     def apply_render(self):
         self._motor_warped = self.apply_warp()
+        # print("inside apply_render, motor_warped = ", self._motor_warped)
         flat_warped = UtilMP.flatten_substrokes(self._motor_warped)
         result = render_image(flat_warped, self._epsilon, self._blur_sigma, self._fixed_parameters)
         pimg = result[0]
