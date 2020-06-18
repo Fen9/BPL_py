@@ -160,6 +160,8 @@ def seqadd(data, xp, yp, inkval):
     if xp.shape[0] != inkval.shape[0]:
         print("ERROR: xp and inkval should have the same shape")
     for i in range(xp.shape[0]):
+        if(int(xp[i]) >= data.shape[0] or int(yp[i]) >= data.shape[1]):
+            continue
         data[int(xp[i]), int(yp[i])] += inkval[i]
     return data
 
