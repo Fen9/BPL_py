@@ -64,7 +64,7 @@ def render_image(cell_traj, epsilon, blur_sigma, PM):
 
         out = check_bounds(myt, PM['imsize'])   # out is a list with len N
         if np.array(out).any():
-            ink_off_page = true
+            ink_off_page = True
             non_out_index = []
             for idx in range(len(out)):
                 if out[idx] == 0:
